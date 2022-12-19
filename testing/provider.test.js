@@ -7,25 +7,47 @@ import { useEffect } from "react";
 import { Provider, useReduxFunctions } from "../package/index";
 
 describe("redux provider", () => {
-  test("Provider renders a default value at a path in redux", () => {
+  test("Provider renders a default value at a path in redux in the DOM", () => {
     const path = ["path", "to", "value"];
     const defaultValue = "some content";
-    render(<Initializer path={path} defaultValue={defaultValue} />);
+    const initialState = {
+      path: {
+        to: {
+          value: defaultValue,
+        },
+      },
+    };
+    render(<Initializer path={path} defaultValue={defaultValue} initialState={initialState} />);
     expect(screen.getByText(defaultValue)).toBeInTheDocument();
   });
-  test("Provider updates a value at a path in redux and renders that value", async () => {
+  test("Provider updates a value at a path in redux and renders that value in the DOM", () => {
     const path = ["path", "to", "new", "value"];
     const defaultValue = "some content";
+    const initialState = {
+      path: {
+        to: {
+          new: {
+            value: defaultValue,
+          },
+        },
+      },
+    };
     const value = "new value";
-    render(<Initializer path={path} defaultValue={defaultValue} value={value} />);
-    await screen.getByText(value);
+    render(
+      <Initializer
+        initialState={initialState}
+        path={path}
+        defaultValue={defaultValue}
+        value={value}
+      />
+    );
     expect(screen.getByText(value)).toBeInTheDocument();
   });
 });
 
-function Initializer({ path, value, defaultValue }) {
+function Initializer({ initialState, path, value, defaultValue }) {
   const config = {
-    initialState: R.assocPath(path, defaultValue, {}),
+    initialState,
   };
   return (
     <Provider config={config}>
