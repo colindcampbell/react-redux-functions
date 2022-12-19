@@ -1,7 +1,4 @@
 import { Provider } from "./Provider";
+import { useReduxFunctions } from "./hooks";
 
-const firstExport = () => {
-  console.log("first function");
-};
-
-export { Provider, firstExport };
+export { Provider, useReduxFunctions };

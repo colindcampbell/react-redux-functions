@@ -1,0 +1,58 @@
+{
+  "extends": ["airbnb", "react-app", "plugin:prettier/recommended"],
+  "plugins": ["jest", "prettier", "import", "react-hooks"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "func-names": 0,
+    "jsx-a11y/href-no-hash": [0],
+    "no-param-reassign": 0,
+    "no-underscore-dangle": 0,
+    "react/jsx-one-expression-per-line": 0,
+    "import/no-cycle": "off",
+    "react/jsx-props-no-spreading": "off",
+    "import/no-anonymous-default-export": "off",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "jsx": "never"
+      }
+    ],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "react/prefer-stateless-function": 0,
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "comma-dangle": ["warn", "only-multiline"],
+    "react/prop-types": [
+      2,
+      {
+        "ignore": ["children", "theme", "className"]
+      }
+    ],
+    "react/jsx-no-bind": 0,
+    "class-methods-use-this": "off",
+    "import/prefer-default-export": "off",
+    "react/no-multi-comp": "off"
+  },
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "jest/globals": true
+  },
+  "parser": "@babel/eslint-parser"
+}
