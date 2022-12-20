@@ -10,7 +10,7 @@ There are some built in utility functions for common tasks such as `useGetValue`
 import { Provider, useReduxFunctions } from "@colincamp/react-redux-functions";
 
 const initialState = {
-  users: [{ id: 1, model: "user", name: "Colin", permission: "admin", upvotes: 0 }],
+  users: [{ id: 1, model: "users", name: "Colin", permission: "admin", upvotes: 0 }],
 };
 
 function Root() {
