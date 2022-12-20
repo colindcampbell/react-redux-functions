@@ -10,7 +10,7 @@ There are some built in utility functions for common tasks such as `useGetValue`
 import { Provider, useReduxFunctions } from "@colincamp/react-redux-functions";
 
 const initialState = {
-  users: [{ name: "Colin", permission: "admin", upvotes: 0 }],
+  users: [{ id: 1, name: "Colin", permission: "admin", upvotes: 0 }],
 };
 
 function Root() {
@@ -26,7 +26,7 @@ function FirstUser({ path }) {
   const { useGetValue } = useReduxFunctions();
   const { name, permission, upvotes } = useGetValue(path, {});
   return (
-    <p>{`the first user is ${name} with permission ${permission} has been upvoted ${upvotes} times`}</p>
+    <p>{`the first user ${name} with permission ${permission} has been upvoted ${upvotes} times`}</p>
   );
 }
 
