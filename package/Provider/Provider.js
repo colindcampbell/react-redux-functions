@@ -1,9 +1,10 @@
 import { createContext, useMemo } from "react";
-import { Provider as ReduxProvider, useDispatch } from "react-redux";
+import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import { createReducers, bindDispatchToAction, useBindToSelector } from "./reduxUtils";
+import { createReducers, bindDispatchToAction } from "./reduxUtils";
 import { valueTransformer } from "../functions";
 import { stateSelector } from "./selectorUtils";
+import { useBindToSelector } from "../hooks";
 
 export const ReduxFunctionsContext = createContext();
 
@@ -30,16 +31,18 @@ export function Provider({ children, config = {} }) {
 function ReduxFunctionProvider({ children, actionTypes, initialState = {} }) {
   const dispatch = useDispatch();
   // This transform function will bind dispatch and create action to the values in the genericActions object
-  const actionBinder = useMemo(() => bindDispatchToAction("default", dispatch), [dispatch]);
   // Create actions and bind dispatch to them. Each action is ready to be called with a payload
   const actions = useMemo(
-    () => valueTransformer(actionBinder, actionTypes),
-    [actionBinder, actionTypes]
+    () => valueTransformer(bindDispatchToAction("default", dispatch), actionTypes),
+    [actionTypes, dispatch]
   );
 
   const useGetValue = useBindToSelector(stateSelector({ initialState }));
 
-  const context = useMemo(() => ({ ...actions, useGetValue }), [actions, useGetValue]);
+  const context = useMemo(
+    () => ({ ...actions, useGetValue, useSelector, dispatch }),
+    [actions, dispatch, useGetValue]
+  );
 
   return (
     <ReduxFunctionsContext.Provider value={context}>{children}</ReduxFunctionsContext.Provider>
