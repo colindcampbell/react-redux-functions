@@ -26,7 +26,7 @@ function FirstUser({ path }) {
   const { useGetValue } = useReduxFunctions();
   const { name, permission, upvotes } = useGetValue(path, {});
   return (
-    <p>{`the first user is ${name} with permission ${permission} has been upvoted ${upvotes} times`}</p>
+    <p>{`the first user ${name} with permission ${permission} has been upvoted ${upvotes} times`}</p>
   );
 }
 
