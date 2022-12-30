@@ -1,6 +1,6 @@
 {
   "name": "@colincamp/react-redux-functions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "utilities for using redux with react hooks",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
