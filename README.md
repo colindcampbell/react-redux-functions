@@ -72,6 +72,7 @@ const actions = {
 The actions defined will then be available to pull out of the `useReduxFunctions` hook, and when called will dispatch that action with the payload provided as first argument in the function call. The optional second argument will be the meta in the action object.
 
 ```js
+// Inside some component:
 const { actionName } = useReduxFunctions();
 const payload = { some: { payload: [] } };
 const meta = { component: "SomeSneakyComponent" };
@@ -86,13 +87,84 @@ actionName(payload, meta);
 */
 ```
 
-### Full Example
+### Custom Action Example
+
+```jsx
+import { Provider, useReduxFunctions } from "@colincamp/react-redux-functions";
+import * as R from "ramda";
+
+const initialState = {
+  users: [{ id: 1, model: "users", name: "Colin", permission: "admin", upvotes: 0 }],
+};
+
+const addToValueReducer = (state, action) => {
+  const payloadPath = R.path(["payload", "path"], action);
+  const payloadValue = R.pathOr(1, ["payload", "value"], action);
+  return R.pipe(
+    R.pathOr(0, payloadPath),
+    R.add(payloadValue),
+    R.assocPath(payloadPath, R.__, state)
+  )(state);
+};
+
+const actions = {
+  addToValue: {
+    reducer: addToValueReducer,
+    type: "ADD_TO_VALUE",
+  },
+};
+
+function Root() {
+  return (
+    <Provider config={{ initialState, actions }}>
+      <FirstUser path={["users", 0]} />
+      <UpvoteFirstUser path={["users", 0]} />
+    </Provider>
+  );
+}
+
+function FirstUser({ path }) {
+  const { useGetValue } = useReduxFunctions();
+  const { name, permission, upvotes } = useGetValue(path, {});
+  return (
+    <p>{`the first user ${name} with permission ${permission} has been upvoted ${upvotes} times`}</p>
+  );
+}
+
+function UpvoteFirstUser({ path }) {
+  const { useGetValue, addToValue } = useReduxFunctions();
+  const { name, upvotes } = useGetValue(path, {});
+  const handleUpvote = value => () => {
+    /*
+    action dispatched:
+    {
+      type: "ADD_TO_VALUE",
+      path: ["users", 0, "upvotes],
+      value: value (undefined or 5)
+    }
+    */
+    addToValue({
+      path: [...path, "upvotes"],
+      value,
+    });
+  };
+  return (
+    <>
+      <button onClick={handleUpvote()}>{`Click to upvote ${name} one time`}</button>
+      <button onClick={handleUpvote(5)}>{`Click to upvote ${name} five times`}</button>
+    </>
+  );
+}
+
+const root = createRoot(document.getElementById("container"));
+root.render(<Root />);
+```
 
 ## TODO
 
 - ~Make config dynamically generate reducers and actions~
 - Switch to the builder callback notation (see https://redux-toolkit.js.org/api/createReducer)
-- Support action definition with object or function (use the key for the action type in this case)
+- ~Support action definition with object or function (use the key for the action type in this case)~
 - Support defining selectors and binding to useSelector
   -- Also support selector creators?
 - Handle reducer slices
