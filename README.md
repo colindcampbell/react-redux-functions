@@ -48,7 +48,7 @@ root.render(<Root />);
 
 ## TODO
 
-- Make config dynamically generate reducers and actions
+- ~Make config dynamically generate reducers and actions~
 - Switch to the builder callback notation (see https://redux-toolkit.js.org/api/createReducer)
 - Support action definition with object or function (use the key for the action type in this case)
 - Support defining selectors and binding to useSelector
