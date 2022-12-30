@@ -9,14 +9,15 @@ import { useBindToSelector } from "../hooks";
 export const ReduxFunctionsContext = createContext();
 
 // eslint-disable-next-line react/prop-types
-export function Provider({ children, config = {} }) {
+export function Provider({ children, config = {}, ...rest }) {
   const { reducer, actionTypes, initialState } = useMemo(() => createReducers(config), [config]);
   const store = useMemo(
     () =>
       configureStore({
+        ...rest,
         reducer,
       }),
-    [reducer]
+    [reducer, rest]
   );
   return (
     <ReduxProvider store={store}>

@@ -6,23 +6,25 @@ const calcReducerWithActions = actionReducer => actions =>
   R.pipe(R.keys, R.reduce(actionReducer(actions), {}))(actions);
 
 const reducersReducer = actions => (acc, name) => {
-  const config = R.propOr({}, name, actions);
-  return R.assoc(config?.type, config?.reducer, acc);
+  const reducer = R.pathOr(R.prop(name, actions), [name, "reducer"], actions);
+  const type = R.pathOr(name, [name, "type"], actions);
+  return R.assoc(type, reducer, acc);
 };
 
-const actionTypesReducer = actions => (acc, name) => {
-  const type = R.path([name, "type"], actions);
+export const actionTypesReducer = actions => (acc, name) => {
+  const type = R.pathOr(name, [name, "type"], actions);
   return R.assoc(name, type, acc);
 };
 
-const calcReducers = calcReducerWithActions(reducersReducer);
-const calcActionTypes = calcReducerWithActions(actionTypesReducer);
+export const calcReducers = calcReducerWithActions(reducersReducer);
+export const calcActionTypes = calcReducerWithActions(actionTypesReducer);
 
-export const createReducers = config => {
-  const reducer = createReducer(config?.initialState, calcReducers(defaultActions));
+export const createReducers = (config = { initialState: {}, actions: {} }) => {
+  const actions = R.mergeDeepRight(config?.actions, defaultActions);
+  const reducer = createReducer(config?.initialState, calcReducers(actions));
   return {
     reducer,
-    actionTypes: calcActionTypes(defaultActions),
+    actionTypes: calcActionTypes(actions),
     initialState: reducer.getInitialState(),
   };
 };
