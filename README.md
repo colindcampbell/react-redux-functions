@@ -46,6 +46,48 @@ const root = createRoot(document.getElementById("container"));
 root.render(<Root />);
 ```
 
+## Extending with Custom Actions and Reducers
+
+When calling the `Provider` component you can provide an `actions` object in the `config` prop. This object is a mapping between and action name and a reducer function in the simple case
+
+```js
+const actions = {
+  [actionName]: reducerFn,
+};
+```
+
+In this case the action name is also the `type` in the payload once the action is dispatched.
+
+You can also use the object definition if you would like to provide a custom `type` for the action.
+
+```js
+const actions = {
+  [actionName]: {
+    reducer: reducerFn,
+    type: "CUSTOM_ACTION_TYPE",
+  },
+};
+```
+
+The actions defined will then be available to pull out of the `useReduxFunctions` hook, and when called will dispatch that action with the payload provided as first argument in the function call. The optional second argument will be the meta in the action object.
+
+```js
+const { actionName } = useReduxFunctions();
+const payload = { some: { payload: [] } };
+const meta = { component: "SomeSneakyComponent" };
+actionName(payload, meta);
+/*
+  action:
+  {
+    type: actionName || "CUSTOM_ACTION_TYPE",
+    payload: { some: { payload: [] } },
+    meta: { component: "SomeSneakyComponent" },
+  }
+*/
+```
+
+### Full Example
+
 ## TODO
 
 - Make config dynamically generate reducers and actions
